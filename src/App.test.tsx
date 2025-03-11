@@ -3,6 +3,12 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import App from "./App";
 import "@testing-library/jest-dom";
 
+jest.mock("react-beautiful-dnd", () => ({
+  DragDropContext: ({ children }: any) => <div>{children}</div>,
+  Droppable: ({ children }: any) => children({ innerRef: jest.fn(), placeholder: null }),
+  Draggable: ({ children }: any) => children({ innerRef: jest.fn(), draggableProps: {}, dragHandleProps: {} }),
+}));
+
 beforeAll(() => {
   Storage.prototype.getItem = jest.fn(() => JSON.stringify([]));
   Storage.prototype.setItem = jest.fn();

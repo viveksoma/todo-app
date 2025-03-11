@@ -1,5 +1,4 @@
-import React from "react"; // <-- Add this import
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import TodoForm from "./components/TodoForm";
 import { Task } from "./types";
 import { v4 as uuidv4 } from "uuid";
@@ -14,6 +13,7 @@ import {
 } from "@mui/material";
 import "./assets/styles/Styles.css";
 import TodoList from "./components/TodoList";
+import { DragDropContext, DropResult } from "react-beautiful-dnd";
 
 const App: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -36,6 +36,17 @@ const App: React.FC = () => {
 
   const addTask = (text: string) => {
     setTasks([...tasks, { id: uuidv4(), text, completed: false }]);
+  };
+
+  const handleDragEnd = (result: DropResult) => {
+  
+    if (!result.destination) return;  // If the drop happens outside the droppable area
+    
+    const updatedTasks = [...tasks];
+    const [movedTask] = updatedTasks.splice(result.source.index, 1);
+    updatedTasks.splice(result.destination.index, 0, movedTask);
+    
+    setTasks(updatedTasks); // Update the tasks state
   };
 
   const toggleComplete = (id: string) => {
@@ -81,11 +92,12 @@ const App: React.FC = () => {
             </Box>
           </CardContent>
 
-           {/* Task List */}
-           <Box mt={2} flex={1} overflow="auto" p={2}>
-            <TodoList tasks={filteredTasks} toggleComplete={toggleComplete} deleteTask={deleteTask} />
+          {/* Task List */}
+          <Box mt={2} flex={1} overflow="auto" p={2}>
+            <DragDropContext onDragEnd={handleDragEnd}>
+              <TodoList tasks={filteredTasks} toggleComplete={toggleComplete} deleteTask={deleteTask} />
+            </DragDropContext>
           </Box>
-
         </Card>
       </Container>
     </Box>

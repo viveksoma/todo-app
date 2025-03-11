@@ -15,12 +15,12 @@ const TodoItem: React.FC<TodoItemProps> = ({ task, toggleComplete, deleteTask })
       sx={{
         display: "flex",
         justifyContent: "space-between",
-        bgcolor: task.completed ? "lightgray" : "white",
+        bgcolor: "white",
         borderRadius: 1,
         mb: 1,
       }}
     >
-      <Checkbox checked={task.completed} onChange={() => toggleComplete(task.id)} />
+      <Checkbox checked={task.completed} onChange={() => toggleComplete(task.id)} aria-label="Mark as complete"  />
       <ListItemText primary={task.text} sx={{ textDecoration: task.completed ? "line-through" : "none" }} />
       <IconButton onClick={() => deleteTask(task.id)} color="error" aria-label="delete task">
         <Delete />
