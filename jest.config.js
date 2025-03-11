@@ -4,9 +4,9 @@ export default {
     '^.+\\.(js|jsx)$': 'babel-jest',
     "^.+\\.css$": "jest-transform-stub", 
   },
-  transformIgnorePatterns: [
-    '/node_modules/(?!react-beautiful-dnd).+\\.js$',
-  ],
+  moduleNameMapper: {
+    "^@hello-pangea/dnd$": "<rootDir>/src/__mocks__/@hello-pangea/dnd.js",
+  },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   testEnvironment: 'jsdom',
 };

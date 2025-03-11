@@ -1,6 +1,6 @@
 import React from "react";
 import { List } from "@mui/material";
-import { Droppable, Draggable } from "react-beautiful-dnd";
+import { Droppable, Draggable } from "@hello-pangea/dnd";
 import { Task } from "../types";
 import TodoItem from "./TodoItem";
 

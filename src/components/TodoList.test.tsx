@@ -4,7 +4,7 @@ import TodoList from "./TodoList";
 import { Task } from "../types";
 import "@testing-library/jest-dom";
 
-jest.mock("react-beautiful-dnd", () => ({
+jest.mock("@hello-pangea/dnd", () => ({
   Droppable: ({ children }: any) => (
     <div data-testid="droppable">{children({ innerRef: jest.fn(), droppableProps: {} })}</div>
   ),

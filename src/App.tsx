@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import "./assets/styles/Styles.css";
 import TodoList from "./components/TodoList";
-import { DragDropContext, DropResult } from "react-beautiful-dnd";
+import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 
 const App: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
