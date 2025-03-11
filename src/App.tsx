@@ -9,12 +9,15 @@ import {
   Box,
   Card,
   CardContent,
+  ToggleButtonGroup,
+  ToggleButton,
 } from "@mui/material";
 import "./assets/styles/Styles.css";
 import TodoList from "./components/TodoList";
 
 const App: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [filter, setFilter] = useState<string>("all");
 
   useEffect(() => {
     const savedTasks = JSON.parse(localStorage.getItem("tasks") || "[]");
@@ -41,6 +44,12 @@ const App: React.FC = () => {
     setTasks(tasks.filter((task) => task.id !== id));
   };
 
+  const filteredTasks = tasks.filter((task) => {
+    if (filter === "completed") return task.completed;
+    if (filter === "active") return !task.completed;
+    return true;
+  });
+
   return (
     <Box className="app-container" display="flex" justifyContent="center" alignItems="center" minHeight="100vh" bgcolor="#f5f5f5">
       <Container maxWidth="md" className="todo-container" sx={{ width: 800 }}>
@@ -51,11 +60,24 @@ const App: React.FC = () => {
             </Typography>
 
             <TodoForm addTask={addTask} />
+            {/* Filter */}
+            <Box display="flex" justifyContent="center" mt={2}>
+              <ToggleButtonGroup
+                value={filter}
+                exclusive
+                onChange={(_, newFilter) => newFilter && setFilter(newFilter)}
+                sx={{ bgcolor: "#e3f2fd", borderRadius: 2 }}
+              >
+                <ToggleButton value="all">All</ToggleButton>
+                <ToggleButton value="active">Active</ToggleButton>
+                <ToggleButton value="completed">Completed</ToggleButton>
+              </ToggleButtonGroup>
+            </Box>
           </CardContent>
 
            {/* Task List */}
            <Box mt={2} flex={1} overflow="auto" p={2}>
-            <TodoList tasks={tasks} toggleComplete={toggleComplete} deleteTask={deleteTask} />
+            <TodoList tasks={filteredTasks} toggleComplete={toggleComplete} deleteTask={deleteTask} />
           </Box>
 
         </Card>

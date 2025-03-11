@@ -72,4 +72,73 @@ describe("App Component", () => {
 
     await waitFor(() => expect(screen.queryByText("Task to Delete")).not.toBeInTheDocument());
   });
+
+  test("filters tasks to show all tasks", async () => {
+    render(<App />);
+    
+    const input = screen.getByLabelText(/add a task/i);
+    const addButton = screen.getByRole("button", { name: /add/i });
+    
+    fireEvent.change(input, { target: { value: "Task 1" } });
+    fireEvent.click(addButton);
+    
+    fireEvent.change(input, { target: { value: "Task 2" } });
+    fireEvent.click(addButton);
+
+    const allFilter = screen.getByRole("button", { name: /all/i });
+    fireEvent.click(allFilter);
+    
+    await waitFor(() => {
+      expect(screen.getByText("Task 1")).toBeInTheDocument();
+      expect(screen.getByText("Task 2")).toBeInTheDocument();
+    });
+  });
+
+  test("filters tasks to show only active tasks", async () => {
+    render(<App />);
+
+    const input = screen.getByLabelText(/add a task/i);
+    const addButton = screen.getByRole("button", { name: /add/i });
+
+    fireEvent.change(input, { target: { value: "Active Task" } });
+    fireEvent.click(addButton);
+
+    fireEvent.change(input, { target: { value: "Completed Task" } });
+    fireEvent.click(addButton);
+
+    const checkboxes = screen.getAllByRole("checkbox");
+    fireEvent.click(checkboxes[1]); // Mark "Completed Task" as completed
+
+    const activeFilter = screen.getByRole("button", { name: /active/i });
+    fireEvent.click(activeFilter);
+
+    await waitFor(() => {
+      expect(screen.getByText("Active Task")).toBeInTheDocument();
+      expect(screen.queryByText("Completed Task")).not.toBeInTheDocument();
+    });
+  });
+
+  test("filters tasks to show only completed tasks", async () => {
+    render(<App />);
+
+    const input = screen.getByLabelText(/add a task/i);
+    const addButton = screen.getByRole("button", { name: /add/i });
+
+    fireEvent.change(input, { target: { value: "Active Task" } });
+    fireEvent.click(addButton);
+
+    fireEvent.change(input, { target: { value: "Completed Task" } });
+    fireEvent.click(addButton);
+
+    const checkboxes = screen.getAllByRole("checkbox");
+    fireEvent.click(checkboxes[1]); // Mark "Completed Task" as completed
+
+    const completedFilter = screen.getByRole("button", { name: /completed/i });
+    fireEvent.click(completedFilter);
+
+    await waitFor(() => {
+      expect(screen.getByText("Completed Task")).toBeInTheDocument();
+      expect(screen.queryByText("Active Task")).not.toBeInTheDocument();
+    });
+  });
 });
