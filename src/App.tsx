@@ -1,35 +1,49 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from "react"; // <-- Add this import
+import { useState, useEffect } from "react";
+import TodoForm from "./components/TodoForm";
+import { Task } from "./types";
+import { v4 as uuidv4 } from "uuid";
+import {
+  Container,
+  Typography,
+  Box,
+  Card,
+  CardContent,
+} from "@mui/material";
+import "./assets/styles/Styles.css";
 
-function App() {
-  const [count, setCount] = useState(0)
+const App: React.FC = () => {
+  const [tasks, setTasks] = useState<Task[]>([]);
+
+  useEffect(() => {
+    const savedTasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+    if (savedTasks) setTasks(savedTasks);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
+
+  const addTask = (text: string) => {
+    setTasks([...tasks, { id: uuidv4(), text, completed: false }]);
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <Box className="app-container" display="flex" justifyContent="center" alignItems="center" minHeight="100vh" bgcolor="#f5f5f5">
+      <Container maxWidth="md" className="todo-container" sx={{ width: 800 }}>
+        <Card elevation={5} sx={{ borderRadius: 3, height: "80vh", display: "flex", flexDirection: "column" }}>
+          <CardContent sx={{ flexShrink: 0 }}>
+            <Typography variant="h4" align="center" gutterBottom className="todo-header" sx={{ fontWeight: "bold", color: "#3f51b5" }}>
+              Todo List
+            </Typography>
 
-export default App
+            <TodoForm addTask={addTask} />
+          </CardContent>
+
+        </Card>
+      </Container>
+    </Box>
+  );
+};
+
+export default App;
