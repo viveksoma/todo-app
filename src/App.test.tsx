@@ -14,6 +14,26 @@ describe("App Component", () => {
     expect(screen.getByText(/todo list/i)).toBeInTheDocument();
   });
 
+  test("handles corrupted data in localStorage gracefully", async () => {
+    render(<App />);
+
+    expect(screen.getByText(/todo list/i)).toBeInTheDocument();
+    expect(screen.getByText(/no tasks available/i)).toBeInTheDocument();
+
+    const input = screen.getByLabelText(/add a task/i);
+    const addButton = screen.getByRole("button", { name: /add/i });
+
+    fireEvent.change(input, { target: { value: "New Task" } });
+    fireEvent.click(addButton);
+
+    await waitFor(() => expect(screen.getByText(/new task/i)).toBeInTheDocument());
+
+    expect(localStorage.setItem).toHaveBeenCalledWith(
+      "tasks",
+      expect.stringContaining("New Task")
+    );
+  });
+
   test("allows users to add a task", async () => {
     render(<App />);
 
