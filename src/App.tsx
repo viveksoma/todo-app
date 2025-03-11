@@ -20,8 +20,14 @@ const App: React.FC = () => {
   const [filter, setFilter] = useState<string>("all");
 
   useEffect(() => {
-    const savedTasks = JSON.parse(localStorage.getItem("tasks") || "[]");
-    if (savedTasks) setTasks(savedTasks);
+    try {
+      const savedTasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+      if (Array.isArray(savedTasks)) {
+        setTasks(savedTasks);
+      }
+    } catch (e) {
+      console.error("Failed to parse tasks from localStorage", e);
+    }
   }, []);
 
   useEffect(() => {
