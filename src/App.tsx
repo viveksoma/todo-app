@@ -11,6 +11,7 @@ import {
   CardContent,
 } from "@mui/material";
 import "./assets/styles/Styles.css";
+import TodoList from "./components/TodoList";
 
 const App: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -28,6 +29,18 @@ const App: React.FC = () => {
     setTasks([...tasks, { id: uuidv4(), text, completed: false }]);
   };
 
+  const toggleComplete = (id: string) => {
+    setTasks(
+      tasks.map((task) =>
+        task.id === id ? { ...task, completed: !task.completed } : task
+      )
+    );
+  };
+
+  const deleteTask = (id: string) => {
+    setTasks(tasks.filter((task) => task.id !== id));
+  };
+
   return (
     <Box className="app-container" display="flex" justifyContent="center" alignItems="center" minHeight="100vh" bgcolor="#f5f5f5">
       <Container maxWidth="md" className="todo-container" sx={{ width: 800 }}>
@@ -39,6 +52,11 @@ const App: React.FC = () => {
 
             <TodoForm addTask={addTask} />
           </CardContent>
+
+           {/* Task List */}
+           <Box mt={2} flex={1} overflow="auto" p={2}>
+            <TodoList tasks={tasks} toggleComplete={toggleComplete} deleteTask={deleteTask} />
+          </Box>
 
         </Card>
       </Container>
