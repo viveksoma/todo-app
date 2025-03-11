@@ -53,7 +53,6 @@ describe("TodoList", () => {
     });
   
     const draggableItems = screen.getAllByRole("listitem");
-    console.log(draggableItems.length); // Debugging line
   
     expect(draggableItems).toHaveLength(2);
   });  
