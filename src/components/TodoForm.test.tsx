@@ -12,6 +12,21 @@ describe("TodoForm", () => {
     expect(screen.getByRole("button", { name: /add/i })).toBeInTheDocument();
   });
 
+  test("disables the add button when the input is empty", () => {
+    render(<TodoForm addTask={jest.fn()} />);
+
+    const addButton = screen.getByRole("button", { name: /add/i });
+    expect(addButton).toBeDisabled(); // Initially disabled
+
+    const input = screen.getByLabelText(/add a task/i);
+    fireEvent.change(input, { target: { value: "New Task" } });
+
+    expect(addButton).not.toBeDisabled(); // Should be enabled now
+
+    fireEvent.change(input, { target: { value: "" } });
+    expect(addButton).toBeDisabled(); // Disabled again
+  });
+
   test("calls addTask with the correct task when submitting a valid task", () => {
     const addTaskMock = jest.fn();
     render(<TodoForm addTask={addTaskMock} />);

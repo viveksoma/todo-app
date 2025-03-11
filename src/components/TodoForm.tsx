@@ -25,7 +25,7 @@ const TodoForm: React.FC<TodoFormProps> = ({ addTask }) => {
         value={task}
         onChange={(e) => setTask(e.target.value)}
       />
-      <Button variant="contained" color="primary" type="submit">
+      <Button variant="contained" color="primary" type="submit" disabled={!task.trim()}>
         Add
       </Button>
     </Box>
